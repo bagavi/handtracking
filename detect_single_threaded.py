@@ -67,6 +67,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     cap = cv2.VideoCapture(args.video_source)
+
+    if cap is None or not cap.isOpened():
+        raise Exception('Warning: unable to open video source')
+
+
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
 
@@ -80,9 +85,11 @@ if __name__ == '__main__':
 
     while True:
         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-        ret, image_np = cap.read()
+        print("Trying grab", cap.grab())
+        ret, image_np = c
         # image_np = cv2.flip(image_np, 1)
         try:
+            print("Image loaded", image_np)
             image_np = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
         except:
             print("Error converting to RGB")
